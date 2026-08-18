@@ -267,6 +267,7 @@ require_once __DIR__ . '/../includes/header.php';
                         <th>Comportement</th>
                         <th>Moyenne</th>
                         <th>Décision</th>
+                        <th style="width:60px">Notes</th>
                         <?php if (estAdmin() || estEncadrant()): ?><th class="text-right">Actions</th><?php endif; ?>
                     </tr>
                     </thead>
@@ -306,6 +307,15 @@ require_once __DIR__ . '/../includes/header.php';
                                     <span class="badge badge--danger">Non validé</span>
                                 <?php else: ?>
                                     <span class="badge badge--warning">Non évalué</span>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <?php if ($l['observations']): ?>
+                                    <span class="badge badge--info" title="<?= e($l['observations']) ?>" style="cursor:help; display:inline-block">
+                                        <strong>💬</strong> Obs.
+                                    </span>
+                                <?php else: ?>
+                                    <span class="muted" style="font-size:0.85em">—</span>
                                 <?php endif; ?>
                             </td>
                             <?php if (estAdmin() || estEncadrant()): ?>

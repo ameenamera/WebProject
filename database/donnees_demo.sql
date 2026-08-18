@@ -44,7 +44,7 @@ INSERT INTO encadrant (nom, prenom, email, telephone, fonction, id_service) VALU
 
 -- ------------------------------------------------------------ Stagiaires
 INSERT INTO stagiaire (nom, prenom, cin, email, telephone, etablissement, specialite, niveau, id_institut) VALUES
-('Aloui',    'Hani',    '11223344', 'hani.aloui@email.tn',    '20 111 222', 'ISET de Tunis', 'Génie logiciel',        '3ème année', 1),
+('Amera',    'Amine',   '11223344', 'amine.amera@email.tn',   '20 111 222', 'ISET de Tunis', 'Génie logiciel',        '3ème année', 1),
 ('Bouzid',   'Nour',    '22334455', 'nour.bouzid@email.tn',   '20 222 333', 'ENIT',          'Génie informatique',    'Ingénieur',  2),
 ('Chaabane', 'Yassine', '33445566', 'y.chaabane@email.tn',    '20 333 444', 'FST',           'Réseaux et télécoms',   'Master 2',   3),
 ('Dridi',    'Ines',    '44556677', 'ines.dridi@email.tn',    '20 444 555', 'ISIMM',         'Systèmes embarqués',    'Master 1',   4),
@@ -96,7 +96,7 @@ INSERT INTO stage (id_stagiaire, id_service, id_encadrant, id_type, sujet, descr
 
 -- ------------------------------------------------------------ Tâches
 INSERT INTO tache (id_stage, titre, description, date_tache, etat, commentaire, date_validation) VALUES
--- Stage 1 (Hani Aloui)
+-- Stage 1 (Amine Amera)
 (1, 'Étude du cahier des charges', 'Lecture et analyse des besoins fonctionnels avec l''encadrant.', '2026-02-03', 'Validée', 'Bonne compréhension du besoin.', '2026-02-04 09:00:00'),
 (1, 'Conception de la base de données', 'Modèle conceptuel et schéma relationnel des huit tables.', '2026-02-07', 'Validée', 'Modèle cohérent et bien normalisé.', '2026-02-08 10:30:00'),
 (1, 'Maquettes des interfaces', 'Réalisation des maquettes des écrans principaux.', '2026-02-14', 'Validée', 'Interfaces claires.', '2026-02-15 11:00:00'),

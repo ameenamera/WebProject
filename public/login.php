@@ -50,70 +50,84 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="login-page">
 
     <aside class="login-aside">
-        <div class="login-aside__logo">
-            <span>🎓</span> <?= e(APP_NAME) ?>
-        </div>
+        <div class="login-aside__content">
+            <div class="login-aside__logo">
+                <span>🎓</span> <?= e(APP_NAME) ?>
+            </div>
 
-        <div>
-            <h2>Pilotez vos stages<br>de bout en bout.</h2>
-            <p>
-                Une plateforme unique pour gérer les stagiaires, suivre les tâches
-                quotidiennes, centraliser les documents et évaluer chaque stage.
-            </p>
-            <ul class="login-features">
-                <li>Dossiers stagiaires &amp; affectation par service</li>
-                <li>Suivi des tâches et taux d'avancement</li>
-                <li>Convention, rapport et attestation en ligne</li>
-                <li>Évaluation et décision finale</li>
-            </ul>
+            <div class="login-aside__info">
+                <h2>Gestion Complète<br>des Stages</h2>
+                <p>Une plateforme intégrée pour simplifier le suivi, l'évaluation et la gestion administrative de vos stagères.</p>
+                <ul class="login-features">
+                    <li>Dossiers stagiaires &amp; suivi administratif</li>
+                    <li>Tâches et progression en temps réel</li>
+                    <li>Évaluations et rapports numériques</li>
+                    <li>Génération de documents officiels</li>
+                </ul>
+            </div>
         </div>
-
-        <div class="login-aside__foot">&copy; <?= date('Y') ?> — Tous droits réservés</div>
+        <div class="login-aside__foot">&copy; <?= date('Y') ?> — Plateforme de Gestion des Stages</div>
     </aside>
 
     <main class="login-main">
-        <div class="login-box">
-            <h1>Connexion</h1>
-            <p>Choisissez votre espace, puis identifiez-vous.</p>
+        <div class="login-container">
+            <div class="login-header">
+                <h1>Connexion</h1>
+                <p>Accédez à votre espace</p>
+            </div>
 
-            <div class="role-tabs">
+            <div class="role-selector">
                 <?php foreach ($roles as $key => $libelle): ?>
-                    <a class="role-tab<?= $role === $key ? ' is-active' : '' ?>"
-                       href="?role=<?= e($key) ?>"><?= e($libelle) ?></a>
+                    <a class="role-btn<?= $role === $key ? ' is-active' : '' ?>"
+                       href="?role=<?= e($key) ?>" title="<?= e($libelle) ?>">
+                       <span class="role-btn__label"><?= e($libelle) ?></span>
+                    </a>
                 <?php endforeach; ?>
             </div>
 
             <?php if ($erreur): ?>
-                <div class="alert alert--error"><span><?= e($erreur) ?></span></div>
+                <div class="alert alert--error" style="margin-bottom: 24px;">
+                    <span><?= e($erreur) ?></span>
+                </div>
             <?php endif; ?>
 
-            <form method="post" autocomplete="off">
+            <form method="post" autocomplete="off" class="login-form">
                 <?= csrfField() ?>
                 <input type="hidden" name="role" value="<?= e($role) ?>">
 
-                <div class="field">
-                    <label for="login">Identifiant</label>
-                    <input class="input" type="text" id="login" name="login"
+                <div class="form-group">
+                    <input class="input-field" type="text" id="login" name="login"
                            value="<?= e($login) ?>" required autofocus
-                           placeholder="ex. admin">
+                           placeholder="Identifiant ou email">
                 </div>
 
-                <div class="field">
-                    <label for="mot_de_passe">Mot de passe</label>
-                    <input class="input" type="password" id="mot_de_passe" name="mot_de_passe"
-                           required placeholder="••••••••">
+                <div class="form-group">
+                    <input class="input-field" type="password" id="mot_de_passe" name="mot_de_passe"
+                           required placeholder="Mot de passe">
                 </div>
 
-                <button class="btn btn--block" type="submit">
-                    Se connecter en tant que <?= e(strtolower($roles[$role])) ?>
+                <button class="btn-signin" type="submit">
+                    <span>Se connecter</span>
+                    <span class="btn-signin__arrow">→</span>
                 </button>
             </form>
 
-            <div class="login-demo">
-                <strong>Comptes de démonstration</strong>
-                Administrateur : <code>admin</code> / <code>admin123</code><br>
-                Encadrant : <code>encadrant</code> / <code>encadrant123</code><br>
-                Stagiaire : <code>stagiaire</code> / <code>stagiaire123</code>
+            <div class="login-credentials">
+                <div class="credentials-header">Test Accounts</div>
+                <div class="credentials-grid">
+                    <div class="credential-item">
+                        <span class="credential-role">Admin</span>
+                        <span class="credential-value">admin / admin123</span>
+                    </div>
+                    <div class="credential-item">
+                        <span class="credential-role">Encadrant</span>
+                        <span class="credential-value">encadrant / encadrant123</span>
+                    </div>
+                    <div class="credential-item">
+                        <span class="credential-role">Stagiaire</span>
+                        <span class="credential-value">stagiaire / stagiaire123</span>
+                    </div>
+                </div>
             </div>
         </div>
     </main>

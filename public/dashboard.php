@@ -78,14 +78,51 @@ $tachesRecentes = fetchAll(
 
 // --- Anneau : taux de validation global des tâches ----------------------
 $g = fetchOne(
-    "SELECT COUNT(*) AS total, SUM(t.etat = 'Validée') AS validees
+    "SELECT COUNT(*) AS total, 
+            SUM(t.etat = 'Validée') AS validees,
+            SUM(t.etat = 'En attente') AS attente,
+            SUM(t.etat = 'Rejetée') AS rejetees
      FROM tache t JOIN stage s ON s.id_stage = t.id_stage
      WHERE 1=1 $filtre", $p
 );
 $tauxGlobal = ((int) $g['total'] > 0) ? (int) round(((int) $g['validees'] / (int) $g['total']) * 100) : 0;
 
+// --- Évaluations avec observations ----------------------------------------
+$evaluationsAvecObs = fetchAll(
+    "SELECT s.id_stage, s.sujet, st.nom, st.prenom, ev.observations, 
+            ev.note_technique, ev.note_comportement, ev.decision
+     FROM evaluation ev
+     JOIN stage s ON s.id_stage = ev.id_stage
+     JOIN stagiaire st ON st.id_stagiaire = s.id_stagiaire
+     WHERE ev.observations IS NOT NULL AND ev.observations != '' AND 1=1 $filtre
+     ORDER BY ev.date_evaluation DESC
+     LIMIT 5", $p
+);
+
 require_once __DIR__ . '/../includes/header.php';
 ?>
+
+<!-- ============================= Taux d'avancement des stages ============================= -->
+<?php if ($g && $g['total'] > 0): ?>
+    <section class="card">
+        <div class="card__body">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:10px">
+                <strong>Taux d'avancement du stage</strong>
+                <span class="muted"><?= (int) $g['validees'] ?> validée(s) sur <?= (int) $g['total'] ?> tâche(s)</span>
+            </div>
+            <div class="progress" style="height:11px">
+                <div class="progress__bar<?= $tauxGlobal >= 100 ? ' progress__bar--success' : '' ?>"
+                     style="width:<?= $tauxGlobal ?>%"></div>
+            </div>
+            <div style="display:flex;gap:14px;margin-top:12px;flex-wrap:wrap">
+                <span class="badge badge--success"><?= (int) $g['validees'] ?> validée(s)</span>
+                <span class="badge badge--warning"><?= (int) $g['attente'] ?> en attente</span>
+                <span class="badge badge--danger"><?= (int) $g['rejetees'] ?> rejetée(s)</span>
+                <span class="badge"><?= $tauxGlobal ?>% d'avancement</span>
+            </div>
+        </div>
+    </section>
+<?php endif; ?>
 
 <!-- ============================= Compteurs ============================= -->
 
@@ -199,5 +236,53 @@ require_once __DIR__ . '/../includes/header.php';
         <?php endif; ?>
     </div>
 </section>
+
+<!-- ==================== Évaluations avec observations ==================== -->
+<?php if ($evaluationsAvecObs): ?>
+<section class="card">
+    <div class="card__head">
+        <h2>Évaluations avec commentaires</h2>
+        <a class="btn btn--secondary btn--sm" href="<?= url('evaluations.php') ?>">Tout voir</a>
+    </div>
+    <div class="card__body card__body--flush">
+        <div class="table-wrap">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Stagiaire</th>
+                    <th>Sujet</th>
+                    <th>Décision</th>
+                    <th style="width:80px">Observations</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($evaluationsAvecObs as $e): ?>
+                    <tr>
+                        <td>
+                            <strong><?= e($e['prenom'] . ' ' . $e['nom']) ?></strong>
+                        </td>
+                        <td style="max-width:250px"><?= e(mb_strimwidth($e['sujet'], 0, 55, '…')) ?></td>
+                        <td>
+                            <?php if ($e['decision'] === 'Validé'): ?>
+                                <span class="badge badge--success">Validé</span>
+                            <?php elseif ($e['decision'] === 'Non validé'): ?>
+                                <span class="badge badge--danger">Non validé</span>
+                            <?php else: ?>
+                                <span class="badge badge--warning">Non évalué</span>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <span class="badge badge--info" title="<?= e($e['observations']) ?>" style="cursor:help; display:inline-block">
+                                <strong>💬</strong> Obs.
+                            </span>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>
